@@ -19,6 +19,7 @@ public class Tile : MonoBehaviour {
 
 	// Object 
 	GameObject tileObject;
+	Rigidbody2D rb;
 
 	// Properties
 	public const int LAYER = 10;
@@ -61,8 +62,33 @@ public class Tile : MonoBehaviour {
 		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = blankImg; 
 		tileObject.transform.FindChild ("Object").gameObject.transform.localScale = new Vector3 (1.565f, 1.565f, 1);
 
+
+
+		/*Vector2 sprite_size = tileObject.GetComponent<SpriteRenderer>().sprite.bounds.size;
+		Debug.Log ("A: " + sprite_size.x + " " + sprite_size.y);
+		float worldScreenHeight = Camera.main.orthographicSize * 2.0f;
+		float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
+		Debug.Log ("B: " + worldScreenWidth);
+		worldScreenWidth /= 5.0f;
+		Debug.Log ("B: " + worldScreenWidth);
+		Vector3 world_scale = new Vector3 ((float)(worldScreenWidth / sprite_size.x), (float)(worldScreenWidth / sprite_size.y) ,1.0f);
+		*/
+
+		float worldScreenHeight = Camera.main.orthographicSize * 2.0f;
+		float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
+		worldScreenWidth /= 5.0f;
+		Vector3 world_scale = new Vector3 (worldScreenWidth, worldScreenWidth ,1.0f);
+		tileObject.transform.localScale = world_scale;
+
+
+		rb = tileObject.GetComponent<Rigidbody2D>();
+
+
+
+
 		bomb = bmb;
 		shown = shwn;
+
 
 	}
 
@@ -162,5 +188,9 @@ public class Tile : MonoBehaviour {
 		int removeSide = (dir + 2 * into) % 4;
 		sides [removeSide] = false;
 		updatePath ();
+	}
+
+	public void setDownwardSpeed(float speed) {
+		rb.velocity = new Vector3 (0,speed,0);
 	}
 }
