@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class tileGeneration : MonoBehaviour {
 
+	float speed;
+
 	//public GameObject testingSquare;
 
 	// Use this for initialization
@@ -11,13 +13,15 @@ public class tileGeneration : MonoBehaviour {
 		Debug.Log (Screen.width);
 		Debug.Log (Screen.height);
 
-
+		speed = -0.05f;
 
 		float sideLength = Screen.width / 5.0f;
 		for (int h = 0; h*sideLength < Screen.height; h++) {
 			for (int x = 0; x < 5; x++) {
 				Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(sideLength/2 +x*sideLength,Screen.height-sideLength/2-h*sideLength, 10.0f));
-				GameObject sq = (GameObject) Instantiate(Resources.Load("testingSquare"), worldPos, Quaternion.Euler(0, 0, 0));
+				Tile sq = new Tile (worldPos.x, worldPos.y, 1, true, true);
+				sq.setNumber (Random.Range(0,10));
+				sq.setDownwardSpeed(speed);
 				//sq.GetComponent<Texture2D>().Resize ((int)(Screen.width * 0.2f), (int)(Screen.width * 0.2f));
 
 				/*Debug.Log (sideLength);
@@ -34,6 +38,7 @@ public class tileGeneration : MonoBehaviour {
 				Debug.Log ("D: " + world_scale.x + " " + world_scale.y + " " + world_scale.z);
 				//sq.transform.localScale = world_scale;*/
 
+				/*
 				Vector2 sprite_size = sq.GetComponent<SpriteRenderer>().sprite.bounds.size;
 				Debug.Log ("A: " + sprite_size.x + " " + sprite_size.y);
 				float worldScreenHeight = Camera.main.orthographicSize * 2.0f;
@@ -45,7 +50,7 @@ public class tileGeneration : MonoBehaviour {
 				Debug.Log ("C: " + world_scale.x + " " + world_scale.y + " " + world_scale.z);
 				sq.transform.localScale = world_scale;
 
-
+				*/
 			}
 		}
 	}
