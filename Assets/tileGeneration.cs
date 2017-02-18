@@ -21,12 +21,83 @@ public class tileGeneration : MonoBehaviour {
 	Vector3 screenSize;
 	Vector3 screenBase;
 
-	void generateRow(int bottom, float y) {
+	void generateRow(int bottom, float y, bool first = false) {
 		for (int i = 0; i < 5; i++) {
 			tiles [bottom, i].setY (y + sideLength);
+			tiles [bottom, i].clearBomb ();
+		}
+		//    |---|
+		//    | 0 |
+		//|--- ___---|
+		//|-1 |str|1 |
+		//
+		int direction = -1;
+		bool[] clear = new bool[5];
+
+		while (direction != 0) {
+			clear [lastGen] = true;
+			direction = Random.Range (-1, 3);
+			if (lastGen == 0 && direction == -1) {
+				direction = 0;
+			}
+			if (lastGen == 4 && direction == 1) {
+				direction = 0;
+			}
+			if (direction == 2) {
+				direction = 0;
+			}
+			lastGen += direction;
+		}
+
+		for (int x = 0; x < 5; x++) {
+			if (!clear[x] && Random.Range (0, 2) == 1) {
+				tiles [bottom, x].plantBomb ();
+			}
+			if (x % 2 == 0) {
+				tiles [bottom, x].hide ();
+			}
+		}
+
+		//updating current row numbers
+		int upper = bottom == verticalExtent - 1 ? 0 : bottom + 1;
+		int under = bottom == 0 ? verticalExtent - 1 : bottom - 1;
+
+		for (int x = 0; x < 5; x++) {
+			if (x == 0) {
+				if (!first) {
+					tiles [bottom, x].setNumber (
+						tiles [under, 0].intIsBomb () + tiles [under, 1].intIsBomb ()
+						+ tiles[bottom, 0].intIsBomb() + tiles[bottom, 1].intIsBomb());
+					tiles [under, x].setNumber (
+						tiles [under, x].getNumber() + tiles [bottom, 0].intIsBomb () + tiles [bottom, 1].intIsBomb ());
+				} else {
+					tiles [bottom, x].setNumber (0);
+				}
+			} else if (x == 4) {
+				if (!first) {
+					tiles [bottom, x].setNumber (
+						tiles [under, 3].intIsBomb () + tiles [under, 4].intIsBomb ()
+						+ tiles[bottom, 3].intIsBomb() + tiles[bottom, 4].intIsBomb());
+					tiles [under, x].setNumber (
+						tiles [under, x].getNumber() + tiles [bottom, 3].intIsBomb () + tiles [bottom, 4].intIsBomb ());
+				} else {
+					tiles [bottom, x].setNumber (0);
+				}
+			} else {
+				if (!first) {
+					tiles [bottom, x].setNumber (
+						tiles [under, x - 1].intIsBomb () + tiles [under, x].intIsBomb () + tiles [under, x + 1].intIsBomb ()
+						+ tiles[bottom, x-1].intIsBomb() + tiles[bottom, x].intIsBomb() + tiles[bottom, x+1].intIsBomb());
+					tiles [under, x].setNumber (
+						tiles [under, x].getNumber() + tiles [bottom, x - 1].intIsBomb () + tiles [bottom, x].intIsBomb () + tiles [bottom, x + 1].intIsBomb ());
+				} else {
+					tiles [bottom, x].setNumber (0);
+				}
+			}
 		}
 
 	}
+		
 
 	void Start () {
 		Debug.Log (Screen.width);
@@ -41,6 +112,7 @@ public class tileGeneration : MonoBehaviour {
 
 		bottomIndex = 0;
 		verticalExtent = (int)(screenSize.y / sideLength) - startHeight + 1;
+		bool firstRow = true;
 
 		//bottomIndex -= startHeight;
 
@@ -52,12 +124,17 @@ public class tileGeneration : MonoBehaviour {
 
 		for (int y = 0; y < verticalExtent; y++) {
 			for (int x = 0; x < 5; x++) {
-				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, 1, true, true);
+				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, (x+y*5)%2 == 0 ? false : true);
 				sq.setNumber (y);
 				sq.setDownwardSpeed(speed);
 				tiles [y, x] = sq;
 			}
-			generateRow (y, lastTop);
+			if (firstRow) {
+				generateRow (y, lastTop, true);
+				firstRow = false;
+			} else {
+				generateRow (y, lastTop);
+			}
 			lastTop += sideLength;
 		}
 	}

@@ -24,10 +24,22 @@ public class Tile : MonoBehaviour {
 	// Properties
 	public const int LAYER = 10;
 
-	bool bomb;
-	bool shown;
+	Color hiddenColor = new Color( 0.4f, 0.4f, 0.4f, 1f );
+	Color hiddenColorOdd = new Color( 0.5f, 0.5f, 0.5f, 1f );
 
-	Sprite[] number = {
+	Color backColor = new Color(0.9f, 0.9f, 0.9f, 1f );
+	Color backColorOdd = new Color(1f, 1f, 1f, 1f );
+
+	bool bomb;
+	bool hidden;
+
+	int number;
+	bool odd;
+
+	Sprite bombSprite = Resources.Load<Sprite>("Tile/bomb");
+	Sprite noneSprite = Resources.Load<Sprite>("Tile/none");
+
+	Sprite[] numberSprite = {
 		Resources.Load<Sprite>("Tile/Numbers/0"),
 		Resources.Load<Sprite>("Tile/Numbers/1"),
 		Resources.Load<Sprite>("Tile/Numbers/2"),
@@ -50,7 +62,7 @@ public class Tile : MonoBehaviour {
 	// Intact sides, true => intact
 	bool[] sides = {true,true,true,true};
 
-	public Tile(float x, float y, float length, bool bmb, bool shwn) {
+	public Tile(float x, float y, bool isOdd, bool hddn = false, bool bmb = false) {
 		tileObject = (GameObject) Instantiate(Resources.Load("Tile/Tile"));
 
 		tileObject.transform.localPosition = new Vector3 (x, y, (float)LAYER);
@@ -62,18 +74,6 @@ public class Tile : MonoBehaviour {
 		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = blankImg; 
 		tileObject.transform.FindChild ("Object").gameObject.transform.localScale = new Vector3 (1.565f, 1.565f, 1);
 
-
-
-		/*Vector2 sprite_size = tileObject.GetComponent<SpriteRenderer>().sprite.bounds.size;
-		Debug.Log ("A: " + sprite_size.x + " " + sprite_size.y);
-		float worldScreenHeight = Camera.main.orthographicSize * 2.0f;
-		float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
-		Debug.Log ("B: " + worldScreenWidth);
-		worldScreenWidth /= 5.0f;
-		Debug.Log ("B: " + worldScreenWidth);
-		Vector3 world_scale = new Vector3 ((float)(worldScreenWidth / sprite_size.x), (float)(worldScreenWidth / sprite_size.y) ,1.0f);
-		*/
-
 		float worldScreenHeight = Camera.main.orthographicSize * 2.0f;
 		float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
 		worldScreenWidth /= 5.0f;
@@ -83,12 +83,16 @@ public class Tile : MonoBehaviour {
 
 		rb = tileObject.GetComponent<Rigidbody2D>();
 
-
-
-
 		bomb = bmb;
-		shown = shwn;
+		hidden = hddn;
+		number = 0;
+		odd = isOdd;
 
+		if (odd) {
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColorOdd;
+		} else {
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColor;
+		}
 
 	}
 
@@ -96,23 +100,43 @@ public class Tile : MonoBehaviour {
 		return bomb;
 	}
 
-	public bool isShown() {
-		return shown;
+	public int intIsBomb() {
+		return bomb ? 1 : 0;
 	}
 
-	public void setBomb(bool bmb) {
-		bomb = bmb;
+	public bool isHidden() {
+		return hidden;
 	}
 
-	public void setShown(bool shwn) {
-		shown = shwn;
+	public void clearBomb() {
+		bomb = false;
+		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
+	}
+	public void plantBomb() {
+		bomb = true;
+		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = bombSprite;
+	}
+
+	public void hide() {
+		hidden = true;
+		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
+		if (odd) {
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = hiddenColorOdd;
+		} else {
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = hiddenColor;
+		}
 	}
 
 	public void setNumber(int num) {
 		if (num > 9 || num < 0)
 			num = 0;
-		
-		tileObject.transform.FindChild("Number").gameObject.GetComponent<SpriteRenderer>().sprite = number[num];
+
+		number = num;
+		tileObject.transform.FindChild("Number").gameObject.GetComponent<SpriteRenderer>().sprite = numberSprite[num];
+	}
+
+	public int getNumber() {
+		return number;
 	}
 
 	public bool topGreater(float comparee) {
