@@ -8,55 +8,68 @@ public class tileGeneration : MonoBehaviour {
 
 	//public GameObject testingSquare;
 
-	// Use this for initialization
+	Tile[,] tiles;
+	float sideLength; //= Screen.width / 5.0f;
+	int startHeight = -2;
+
+	int bottomIndex;
+	int verticalExtent;
+
+	// previous location of generation for path
+	int lastGen = 2;
+
+	Vector3 screenSize;
+	Vector3 screenBase;
+
+	void generateRow(int bottom, float y) {
+		for (int i = 0; i < 5; i++) {
+			tiles [bottom, i].setY (y + sideLength);
+		}
+
+	}
+
 	void Start () {
 		Debug.Log (Screen.width);
 		Debug.Log (Screen.height);
 
-		speed = -0.05f;
+		screenBase = Camera.main.ScreenToWorldPoint (new Vector3 (0f, 0f, 0f));
+		screenSize = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0f)) * 2.0f;
 
-		float sideLength = Screen.width / 5.0f;
-		for (int h = 0; h*sideLength < Screen.height; h++) {
+		Debug.Log (screenSize);
+			//- Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 10.0f));
+		sideLength = screenSize.x / 5f;
+
+		bottomIndex = 0;
+		verticalExtent = (int)(screenSize.y / sideLength) - startHeight + 1;
+
+		//bottomIndex -= startHeight;
+
+		tiles = new Tile[verticalExtent, 5];
+		float lastTop = screenBase.y - sideLength / 2;
+
+		speed = -0.55f;
+		//float h = screenBase.y + screenSize.y - sideLength/2;
+
+		for (int y = 0; y < verticalExtent; y++) {
 			for (int x = 0; x < 5; x++) {
-				Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(sideLength/2 +x*sideLength,Screen.height-sideLength/2-h*sideLength, 10.0f));
-				Tile sq = new Tile (worldPos.x, worldPos.y, 1, true, true);
-				sq.setNumber (Random.Range(0,10));
+				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, 1, true, true);
+				sq.setNumber (y);
 				sq.setDownwardSpeed(speed);
-				//sq.GetComponent<Texture2D>().Resize ((int)(Screen.width * 0.2f), (int)(Screen.width * 0.2f));
-
-				/*Debug.Log (sideLength);
-				//get world space size (this version handles rotating correctly)
-				Vector2 sprite_size = sq.GetComponent<SpriteRenderer>().sprite.bounds.size;
-				Debug.Log ("A: " + sprite_size.x + " " + sprite_size.y);
-				float pixels_per_unit = sq.GetComponent<SpriteRenderer> ().sprite.pixelsPerUnit;
-				Debug.Log ("B: " + pixels_per_unit);
-				Vector2 local_sprite_size = sprite_size / pixels_per_unit;
-				local_sprite_size.x -= .2f;
-				local_sprite_size.y -= .2f;
-				Debug.Log ("C: " + local_sprite_size.x + " " + local_sprite_size.y);
-				Vector3 world_scale = new Vector3 ((float)(sideLength/local_sprite_size.x), (float)(sideLength/local_sprite_size.y) ,1.0f);
-				Debug.Log ("D: " + world_scale.x + " " + world_scale.y + " " + world_scale.z);
-				//sq.transform.localScale = world_scale;*/
-
-				/*
-				Vector2 sprite_size = sq.GetComponent<SpriteRenderer>().sprite.bounds.size;
-				Debug.Log ("A: " + sprite_size.x + " " + sprite_size.y);
-				float worldScreenHeight = Camera.main.orthographicSize * 2.0f;
-				float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
-				Debug.Log ("B: " + worldScreenWidth);
-				worldScreenWidth /= 5.0f;
-				Debug.Log ("B: " + worldScreenWidth);
-				Vector3 world_scale = new Vector3 ((float)(worldScreenWidth / sprite_size.x), (float)(worldScreenWidth / sprite_size.y) ,1.0f);
-				Debug.Log ("C: " + world_scale.x + " " + world_scale.y + " " + world_scale.z);
-				sq.transform.localScale = world_scale;
-
-				*/
+				tiles [y, x] = sq;
 			}
+			generateRow (y, lastTop);
+			lastTop += sideLength;
 		}
 	}
 
+
 	// Update is called once per frame
 	void Update () {
-		
+		if (tiles [bottomIndex,0].topGreater (screenBase.y + screenSize.y + sideLength/2)) {
+			int topIndex = bottomIndex == 0 ? verticalExtent - 1 : bottomIndex - 1;
+			Debug.Log (topIndex);
+			generateRow (bottomIndex, tiles[topIndex, 0].getY());
+			bottomIndex = bottomIndex == verticalExtent-1 ? 0 : bottomIndex + 1;
+		}
 	}
 }

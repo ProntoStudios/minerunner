@@ -115,6 +115,20 @@ public class Tile : MonoBehaviour {
 		tileObject.transform.FindChild("Number").gameObject.GetComponent<SpriteRenderer>().sprite = number[num];
 	}
 
+	public bool topGreater(float comparee) {
+		// Is the top of the object less than the comparee
+		return -tileObject.transform.position.y > comparee;
+	}
+
+	public void setY(float newY) {
+		Vector3 newPos = new Vector3 (tileObject.transform.localPosition.x, newY, tileObject.transform.localPosition.z);
+		tileObject.transform.transform.localPosition = newPos;
+	}
+
+	public float getY() {
+		return tileObject.transform.localPosition.y;
+	}
+
 	private void updatePath() {
 		SpriteRenderer path = tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ();
 		Transform numTransform = tileObject.transform.FindChild ("Object").gameObject.transform;
