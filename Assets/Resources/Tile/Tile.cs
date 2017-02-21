@@ -2,22 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileController : MonoBehaviour {
-	
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-}
 
-public class Tile : MonoBehaviour {
+public class Tile {
 
-	// Object 
 	GameObject tileObject;
 	Rigidbody2D rb;
 
@@ -63,7 +50,7 @@ public class Tile : MonoBehaviour {
 	bool[] sides = {true,true,true,true};
 
 	public Tile(float x, float y, bool isOdd, bool hddn = false, bool bmb = false) {
-		tileObject = (GameObject) Instantiate(Resources.Load("Tile/Tile"));
+		tileObject = (GameObject) GameObject.Instantiate(Resources.Load("Tile/Tile"));
 
 		tileObject.transform.localPosition = new Vector3 (x, y, (float)LAYER);
 
@@ -231,4 +218,6 @@ public class Tile : MonoBehaviour {
 	public void setDownwardSpeed(float speed) {
 		rb.velocity = new Vector3 (0,speed,0);
 	}
+		
+
 }

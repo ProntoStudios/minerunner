@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class tileGeneration : MonoBehaviour {
 
-	float speed;
+	float speed = -0.55f;
 
 	//public GameObject testingSquare;
 
@@ -59,8 +59,8 @@ public class tileGeneration : MonoBehaviour {
 		}
 
 		//updating current row numbers
-		int upper = bottom == verticalExtent - 1 ? 0 : bottom + 1;
-		int under = bottom == 0 ? verticalExtent - 1 : bottom - 1;
+		int upper = (bottom == verticalExtent - 1) ? 0 : (bottom + 1);
+		int under = (bottom == 0) ? (verticalExtent - 1) : (bottom - 1);
 
 		for (int x = 0; x < 5; x++) {
 			if (x == 0) {
@@ -107,25 +107,26 @@ public class tileGeneration : MonoBehaviour {
 		screenSize = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0f)) * 2.0f;
 
 		Debug.Log (screenSize);
+		Debug.Log (screenBase);
 			//- Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 10.0f));
 		sideLength = screenSize.x / 5f;
 
-		bottomIndex = 0;
-		verticalExtent = (int)(screenSize.y / sideLength) - startHeight + 1;
-		bool firstRow = true;
-
 		//bottomIndex -= startHeight;
+		bottomIndex = 0;
+		verticalExtent = (int)(screenSize.y / sideLength) - startHeight + 1;//where start height = -ve number like -2
 
 		tiles = new Tile[verticalExtent, 5];
 		float lastTop = screenBase.y - sideLength / 2;
 
-		speed = -0.55f;
 		//float h = screenBase.y + screenSize.y - sideLength/2;
 
+		bool firstRow = true;
 		for (int y = 0; y < verticalExtent; y++) {
 			for (int x = 0; x < 5; x++) {
-				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, (x+y*5)%2 == 0 ? false : true);
-				sq.setNumber (y);
+				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, !((x+y*5)%2 == 0));
+				//y set when row generated
+
+				//sq.setNumber (y);
 				sq.setDownwardSpeed(speed);
 				tiles [y, x] = sq;
 			}
@@ -143,10 +144,11 @@ public class tileGeneration : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (tiles [bottomIndex,0].topGreater (screenBase.y + screenSize.y + sideLength/2)) {
-			int topIndex = bottomIndex == 0 ? verticalExtent - 1 : bottomIndex - 1;
+			//if bottom row has exceeded screen
+			int topIndex = (bottomIndex == 0) ? (verticalExtent - 1) : (bottomIndex - 1);
 			Debug.Log (topIndex);
 			generateRow (bottomIndex, tiles[topIndex, 0].getY());
-			bottomIndex = bottomIndex == verticalExtent-1 ? 0 : bottomIndex + 1;
+			bottomIndex = (bottomIndex == verticalExtent-1) ? 0 : (bottomIndex + 1);
 		}
 	}
 }
