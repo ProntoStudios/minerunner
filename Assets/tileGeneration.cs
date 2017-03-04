@@ -59,7 +59,7 @@ public class tileGeneration : MonoBehaviour {
 		}
 
 		//updating current row numbers
-		int upper = (bottom == verticalExtent - 1) ? 0 : (bottom + 1);
+		//int upper = (bottom == verticalExtent - 1) ? 0 : (bottom + 1);
 		int under = (bottom == 0) ? (verticalExtent - 1) : (bottom - 1);
 
 		for (int x = 0; x < 5; x++) {

@@ -17,7 +17,7 @@ public class touchController : MonoBehaviour {
 		}
 
 
-		/*
+
 		if(Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Stationary)
 		{
 			Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
@@ -30,6 +30,6 @@ public class touchController : MonoBehaviour {
 			}
 
 		}
-		*/
+
 	}
 }
