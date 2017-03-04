@@ -9,8 +9,6 @@ public class touchController : MonoBehaviour {
 	private Vector2 touchStartPosition;
 
 	void Update () {
-
-
 		/*if ( Input.GetMouseButtonDown (0)){ 
 			//Debug.Log ("mouse down");
 			Vector3 worldTouch = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
@@ -19,8 +17,6 @@ public class touchController : MonoBehaviour {
 				Debug.Log("You selected the " + hit.transform.name); // ensure you picked right object
 			}
 		}*/
-
-
 		if(Input.touchCount > 0 ){
 			switch (Input.GetTouch(0).phase) {
 			case TouchPhase.Began:
@@ -54,6 +50,7 @@ public class touchController : MonoBehaviour {
 			case TouchPhase.Ended:
 				if (currentTouchId != -1) {//if touch not already handled
 					Debug.Log ("tap");
+					Tap(touchStartPosition);
 					currentTouchId = -1;
 				}
 				break;
@@ -64,5 +61,14 @@ public class touchController : MonoBehaviour {
 
 		}
 
+	}
+
+
+	void Tap (Vector2 pos) {
+		Vector3 worldTouch = Camera.main.ScreenToWorldPoint(pos); 
+		RaycastHit2D hit = Physics2D.Raycast (new Vector2 (worldTouch.x, worldTouch.y), Vector2.zero, Mathf.Infinity);
+		if (hit != null) {
+			Debug.Log("You selected the " + hit.transform.name); // ensure you picked right object
+		}
 	}
 }

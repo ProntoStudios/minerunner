@@ -123,7 +123,7 @@ public class tileGeneration : MonoBehaviour {
 		bool firstRow = true;
 		for (int y = 0; y < verticalExtent; y++) {
 			for (int x = 0; x < 5; x++) {
-				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, !((x+y*5)%2 == 0));
+				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, x, y, !((x+y*5)%2 == 0));
 				//y set when row generated
 
 				//sq.setNumber (y);
