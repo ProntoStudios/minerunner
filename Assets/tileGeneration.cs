@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class tileGeneration : MonoBehaviour {
-
 	float speed = -0.55f;
 
 	//public GameObject testingSquare;
@@ -18,7 +17,7 @@ public class tileGeneration : MonoBehaviour {
 	// previous location of generation for path
 	int lastGen = 2;
 
-	Vector3 screenSize;
+	Vector3 screenSize;	
 	Vector3 screenBase;
 
 	void generateRow(int bottom, float y, bool first = false) {
@@ -100,6 +99,7 @@ public class tileGeneration : MonoBehaviour {
 		
 
 	void Start () {
+
 		Debug.Log (Screen.width);
 		Debug.Log (Screen.height);
 
@@ -114,6 +114,7 @@ public class tileGeneration : MonoBehaviour {
 		//bottomIndex -= startHeight;
 		bottomIndex = 0;
 		verticalExtent = (int)(screenSize.y / sideLength) - startHeight + 1;//where start height = -ve number like -2
+		verticalExtent += (verticalExtent % 2); //make the number of vertical tiles an even number
 
 		tiles = new Tile[verticalExtent, 5];
 		float lastTop = screenBase.y - sideLength / 2;
@@ -123,7 +124,7 @@ public class tileGeneration : MonoBehaviour {
 		bool firstRow = true;
 		for (int y = 0; y < verticalExtent; y++) {
 			for (int x = 0; x < 5; x++) {
-				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0, !((x+y*5)%2 == 0));
+				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0f, x, y, !((x+y*5)%2 == 0));
 				//y set when row generated
 
 				//sq.setNumber (y);
@@ -146,7 +147,7 @@ public class tileGeneration : MonoBehaviour {
 		if (tiles [bottomIndex,0].topGreater (screenBase.y + screenSize.y + sideLength/2)) {
 			//if bottom row has exceeded screen
 			int topIndex = (bottomIndex == 0) ? (verticalExtent - 1) : (bottomIndex - 1);
-			Debug.Log (topIndex);
+			//Debug.Log (topIndex);
 			generateRow (bottomIndex, tiles[topIndex, 0].getY());
 			bottomIndex = (bottomIndex == verticalExtent-1) ? 0 : (bottomIndex + 1);
 		}

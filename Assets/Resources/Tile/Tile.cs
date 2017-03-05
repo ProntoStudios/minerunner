@@ -49,8 +49,9 @@ public class Tile {
 	// Intact sides, true => intact
 	bool[] sides = {true,true,true,true};
 
-	public Tile(float x, float y, bool isOdd, bool hddn = false, bool bmb = false) {
+	public Tile(float x, float y, int ix, int iy, bool isOdd, bool hddn = false, bool bmb = false) {
 		tileObject = (GameObject) GameObject.Instantiate(Resources.Load("Tile/Tile"));
+		tileObject.name = ix.ToString() + "," + iy.ToString();
 
 		tileObject.transform.localPosition = new Vector3 (x, y, (float)LAYER);
 
