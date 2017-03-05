@@ -5,28 +5,28 @@ using UnityEngine;
 
 public class Tile {
 
-	GameObject tileObject;
-	Rigidbody2D rb;
+	private GameObject tileObject;
+	private Rigidbody2D rb;
 
-	// Properties
-	public const int LAYER = 10;
+	//Object Properties
+	private bool bomb;
+	private bool hidden;
+	private int number;
+	private bool odd;
+	// Intact sides, true => intact
+	private bool[] sides = {true,true,true,true};
 
-	Color hiddenColor = new Color( 0.4f, 0.4f, 0.4f, 1f );
-	Color hiddenColorOdd = new Color( 0.5f, 0.5f, 0.5f, 1f );
+	//Static properties
+	static int LAYER = 10;
 
-	Color backColor = new Color(0.9f, 0.9f, 0.9f, 1f );
-	Color backColorOdd = new Color(1f, 1f, 1f, 1f );
+	static Color hiddenColor = new Color( 0.4f, 0.4f, 0.4f, 1f );
+	static Color hiddenColorOdd = new Color( 0.5f, 0.5f, 0.5f, 1f );
+	static Color backColor = new Color(0.9f, 0.9f, 0.9f, 1f );
+	static Color backColorOdd = new Color(1f, 1f, 1f, 1f );
 
-	bool bomb;
-	bool hidden;
-
-	int number;
-	bool odd;
-
-	Sprite bombSprite = Resources.Load<Sprite>("Tile/bomb");
-	Sprite noneSprite = Resources.Load<Sprite>("Tile/none");
-
-	Sprite[] numberSprite = {
+	static Sprite bombSprite = Resources.Load<Sprite>("Tile/bomb");
+	static Sprite noneSprite = Resources.Load<Sprite>("Tile/none");
+	static Sprite[] numberSprite = {
 		Resources.Load<Sprite>("Tile/Numbers/0"),
 		Resources.Load<Sprite>("Tile/Numbers/1"),
 		Resources.Load<Sprite>("Tile/Numbers/2"),
@@ -38,16 +38,13 @@ public class Tile {
 		Resources.Load<Sprite>("Tile/Numbers/8"),
 		Resources.Load<Sprite>("Tile/Numbers/9")
 	};
+	static Sprite blankImg = Resources.Load<Sprite>("Tile/Paths/blank");
+	static Sprite crossPath = Resources.Load<Sprite>("Tile/Paths/cross");
+	static Sprite endPath = Resources.Load<Sprite>("Tile/Paths/end");
+	static Sprite lPath = Resources.Load<Sprite>("Tile/Paths/l");
+	static Sprite tPath = Resources.Load<Sprite>("Tile/Paths/t");
+	static Sprite straightPath = Resources.Load<Sprite>("Tile/Paths/straight");
 
-	Sprite blankImg = Resources.Load<Sprite>("Tile/Paths/blank");
-	Sprite crossPath = Resources.Load<Sprite>("Tile/Paths/cross");
-	Sprite endPath = Resources.Load<Sprite>("Tile/Paths/end");
-	Sprite lPath = Resources.Load<Sprite>("Tile/Paths/l");
-	Sprite tPath = Resources.Load<Sprite>("Tile/Paths/t");
-	Sprite straightPath = Resources.Load<Sprite>("Tile/Paths/straight");
-
-	// Intact sides, true => intact
-	bool[] sides = {true,true,true,true};
 
 	public Tile(float x, float y, int indexX, int indexY, bool isOdd, bool hddn = false, bool bmb = false) {
 		tileObject = (GameObject) GameObject.Instantiate(Resources.Load("Tile/Tile"));
