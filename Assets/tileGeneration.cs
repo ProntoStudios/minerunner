@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class tileGeneration : MonoBehaviour {
 	float speed = -0.55f;
+	public static tileGeneration instance;
 
 	//public GameObject testingSquare;
 
@@ -19,6 +20,17 @@ public class tileGeneration : MonoBehaviour {
 
 	Vector3 screenSize;	
 	Vector3 screenBase;
+
+	struct Int2 {
+		public int x;
+		public int y;
+	}
+
+	Int2 playerLoc;
+	public bool movingPlayer = false;
+
+	private GameObject player;
+	playerController playerScript;
 
 	void generateRow(int bottom, float y, bool first = false) {
 		for (int i = 0; i < 5; i++) {
@@ -99,12 +111,20 @@ public class tileGeneration : MonoBehaviour {
 		
 
 	void Start () {
+		if (instance == null) {
+			instance = this;
+		} else if (instance != this) {
+			Destroy (gameObject);
+		}
 
 		Debug.Log (Screen.width);
 		Debug.Log (Screen.height);
 
 		screenBase = Camera.main.ScreenToWorldPoint (new Vector3 (0f, 0f, 0f));
 		screenSize = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0f)) * 2.0f;
+
+		player = (GameObject) GameObject.Instantiate(Resources.Load("Player/Player"));
+		playerScript = player.transform.GetComponent<playerController> ();
 
 		Debug.Log (screenSize);
 		Debug.Log (screenBase);
@@ -140,9 +160,22 @@ public class tileGeneration : MonoBehaviour {
 			}
 			lastTop += sideLength;
 		}
+
+		float worldScreenHeight = Camera.main.orthographicSize * 2.0f;
+		float worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
+		worldScreenWidth /= 5.0f;
+		Vector3 world_scale = new Vector3 (worldScreenWidth, worldScreenWidth, 1.0f);
+
+		playerScript.sideLength = sideLength;
+		player.transform.localScale = world_scale;
+		playerScript.setDownwardSpeed (speed);
+		playerScript.setPosition (screenBase.x + sideLength / 2 + 2 * sideLength, sideLength * 4 + screenBase.y - sideLength / 2);
+
+		playerLoc.x = 2;
+		playerLoc.y = 3;
+
 	}
-
-
+		
 	// Update is called once per frame
 	void Update () {
 		if (tiles [bottomIndex,0].topGreater (screenBase.y + screenSize.y + sideLength/2)) {
@@ -159,6 +192,31 @@ public class tileGeneration : MonoBehaviour {
 		Tile hit = tiles[indexX, indexY];
 		if (hit.isHidden()/* && not path??*/) {
 			hit.nextFlag ();
+		}
+	}
+
+	public void movePlayerLeft() {
+		if (!movingPlayer && playerLoc.x > 0) {
+			movingPlayer = true;
+			playerScript.move (-1, 0, tiles[playerLoc.y, --playerLoc.x]);
+		}
+	}
+	public void movePlayerRight() {
+		if (!movingPlayer && playerLoc.x < 4) {
+			movingPlayer = true;
+			playerScript.move (1, 0, tiles[playerLoc.y, ++playerLoc.x]);
+		}
+	}
+	public void movePlayerUp() {
+		if (!movingPlayer && playerLoc.y < verticalExtent-1) {
+			movingPlayer = true;
+			playerScript.move (0, 1, tiles[++playerLoc.y, playerLoc.x]);
+		}
+	}
+	public void movePlayerDown() {
+		if (!movingPlayer && playerLoc.y > 0) {
+			movingPlayer = true;
+			playerScript.move (0, -1, tiles[--playerLoc.y, playerLoc.x]);
 		}
 	}
 

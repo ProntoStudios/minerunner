@@ -29,15 +29,19 @@ public class touchController : MonoBehaviour {
 					//Check if it is left or right?
 					if (touchDeltaPosition.x < -1*threshhold && Mathf.Abs(touchDeltaPosition.x) > Mathf.Abs(touchDeltaPosition.y)) {
 						Debug.Log ("left");
+						tileGeneration.instance.movePlayerLeft();
 						currentTouchId = -1;
 					} else if (touchDeltaPosition.x > threshhold && Mathf.Abs(touchDeltaPosition.x) > Mathf.Abs(touchDeltaPosition.y)) {
 						Debug.Log ("right");
+						tileGeneration.instance.movePlayerRight();
 						currentTouchId = -1;
 					} else if (touchDeltaPosition.y < -1*threshhold) {
 						Debug.Log ("down");
+						tileGeneration.instance.movePlayerDown();
 						currentTouchId = -1;
 					} else if (touchDeltaPosition.y > threshhold) {
 						Debug.Log ("up");
+						tileGeneration.instance.movePlayerUp();
 						currentTouchId = -1;
 					} 
 				}

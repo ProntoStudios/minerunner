@@ -166,6 +166,10 @@ public class Tile {
 		return tileObject.transform.localPosition.y;
 	}
 
+	public float getX() {
+		return tileObject.transform.localPosition.x;
+	}
+
 	private void updatePath() {
 		SpriteRenderer path = tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ();
 		Transform numTransform = tileObject.transform.FindChild ("Object").gameObject.transform;
