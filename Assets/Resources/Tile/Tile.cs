@@ -5,28 +5,35 @@ using UnityEngine;
 
 public class Tile {
 
-	GameObject tileObject;
-	Rigidbody2D rb;
+	private GameObject tileObject;
+	private Rigidbody2D rb;
 
-	// Properties
-	public const int LAYER = 10;
+	//Object Fields
+	private bool bomb;
+	private int flag;
+	private bool hidden;
+	private int number;
+	private bool odd;
+	// Intact sides, true => intact
+	private bool[] sides = {true,true,true,true};
 
-	Color hiddenColor = new Color( 0.4f, 0.4f, 0.4f, 1f );
-	Color hiddenColorOdd = new Color( 0.5f, 0.5f, 0.5f, 1f );
+	//[Static] Constant Fields
+	private const int LAYER = 10;
+	private const int FLAG_NONE = 0;
+	private const int FLAG_RED = 1;
+	private const int FLAG_GREEN = 2;
 
-	Color backColor = new Color(0.9f, 0.9f, 0.9f, 1f );
-	Color backColorOdd = new Color(1f, 1f, 1f, 1f );
+	//Static Fields
+	private static Color hiddenColor = new Color( 0.4f, 0.4f, 0.4f, 1f );
+	private static Color hiddenColorOdd = new Color( 0.5f, 0.5f, 0.5f, 1f );
+	private static Color backColor = new Color(0.9f, 0.9f, 0.9f, 1f );
+	private static Color backColorOdd = new Color(1f, 1f, 1f, 1f );
 
-	bool bomb;
-	bool hidden;
-
-	int number;
-	bool odd;
-
-	Sprite bombSprite = Resources.Load<Sprite>("Tile/bomb");
-	Sprite noneSprite = Resources.Load<Sprite>("Tile/none");
-
-	Sprite[] numberSprite = {
+	private static Sprite bombSprite = Resources.Load<Sprite>("Tile/bomb");
+	private static Sprite flagGreenSprite = Resources.Load<Sprite>("Tile/flagGreen");
+	private static Sprite flagRedSprite = Resources.Load<Sprite>("Tile/flagRed");
+	private static Sprite noneSprite = Resources.Load<Sprite>("Tile/none");
+	private static Sprite[] numberSprite = {
 		Resources.Load<Sprite>("Tile/Numbers/0"),
 		Resources.Load<Sprite>("Tile/Numbers/1"),
 		Resources.Load<Sprite>("Tile/Numbers/2"),
@@ -38,22 +45,20 @@ public class Tile {
 		Resources.Load<Sprite>("Tile/Numbers/8"),
 		Resources.Load<Sprite>("Tile/Numbers/9")
 	};
+	private static Sprite blankImg = Resources.Load<Sprite>("Tile/Paths/blank");
+	private static Sprite crossPath = Resources.Load<Sprite>("Tile/Paths/cross");
+	private static Sprite endPath = Resources.Load<Sprite>("Tile/Paths/end");
+	private static Sprite lPath = Resources.Load<Sprite>("Tile/Paths/l");
+	private static Sprite tPath = Resources.Load<Sprite>("Tile/Paths/t");
+	private static Sprite straightPath = Resources.Load<Sprite>("Tile/Paths/straight");
 
-	Sprite blankImg = Resources.Load<Sprite>("Tile/Paths/blank");
-	Sprite crossPath = Resources.Load<Sprite>("Tile/Paths/cross");
-	Sprite endPath = Resources.Load<Sprite>("Tile/Paths/end");
-	Sprite lPath = Resources.Load<Sprite>("Tile/Paths/l");
-	Sprite tPath = Resources.Load<Sprite>("Tile/Paths/t");
-	Sprite straightPath = Resources.Load<Sprite>("Tile/Paths/straight");
 
-	// Intact sides, true => intact
-	bool[] sides = {true,true,true,true};
-
-	public Tile(float x, float y, int ix, int iy, bool isOdd, bool hddn = false, bool bmb = false) {
+	public Tile(float x, float y, int indexX, int indexY, bool isOdd, bool hddn = false, bool bmb = false) {
 		tileObject = (GameObject) GameObject.Instantiate(Resources.Load("Tile/Tile"));
-		tileObject.name = ix.ToString() + "," + iy.ToString();
+		tileObject.name = "(" + indexX.ToString () + "," + indexY.ToString () + ")";
 
 		tileObject.transform.localPosition = new Vector3 (x, y, (float)LAYER);
+		tileObject.GetComponent<TileObjectAttributes>().setIndex(indexX, indexY);
 
 		tileObject.GetComponentInChildren<Transform> ().Find ("Background").transform.localPosition = new Vector3(0, 0, LAYER-1);
 		tileObject.GetComponentInChildren<Transform> ().Find ("Object").transform.localPosition = new Vector3(0, 0, LAYER-2);
@@ -72,6 +77,7 @@ public class Tile {
 		rb = tileObject.GetComponent<Rigidbody2D>();
 
 		bomb = bmb;
+		flag = FLAG_NONE;
 		hidden = hddn;
 		number = 0;
 		odd = isOdd;
@@ -87,11 +93,14 @@ public class Tile {
 	public bool isBomb() {
 		return bomb;
 	}
-
 	public int intIsBomb() {
-		return bomb ? 1 : 0;
+		return (bomb)?1:0;
 	}
 
+	public int getFlag() {
+		return flag;
+	}
+		
 	public bool isHidden() {
 		return hidden;
 	}
@@ -105,8 +114,24 @@ public class Tile {
 		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = bombSprite;
 	}
 
+	public void clearFlag() {
+		flag = FLAG_NONE;
+		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
+	}
+	public void nextFlag() {
+		flag = (flag+1)%3;
+		if (flag == FLAG_GREEN) {
+			tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = flagGreenSprite;
+		} else if (flag == FLAG_RED) {
+			tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = flagRedSprite;
+		} else {
+			tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
+		}
+	}
+
 	public void hide() {
 		hidden = true;
+		flag = 0;
 		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
 		if (odd) {
 			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = hiddenColorOdd;

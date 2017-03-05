@@ -58,7 +58,7 @@ public class tileGeneration : MonoBehaviour {
 		}
 
 		//updating current row numbers
-		int upper = (bottom == verticalExtent - 1) ? 0 : (bottom + 1);
+		//int upper = (bottom == verticalExtent - 1) ? 0 : (bottom + 1);
 		int under = (bottom == 0) ? (verticalExtent - 1) : (bottom - 1);
 
 		for (int x = 0; x < 5; x++) {
@@ -124,7 +124,8 @@ public class tileGeneration : MonoBehaviour {
 		bool firstRow = true;
 		for (int y = 0; y < verticalExtent; y++) {
 			for (int x = 0; x < 5; x++) {
-				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0f, x, y, !((x+y*5)%2 == 0));
+				
+				Tile sq = new Tile(screenBase.x + sideLength/2 +x*sideLength, 0f, y, x, !((x+y*5)%2 == 0));
 				//y set when row generated
 
 				//sq.setNumber (y);
@@ -152,4 +153,13 @@ public class tileGeneration : MonoBehaviour {
 			bottomIndex = (bottomIndex == verticalExtent-1) ? 0 : (bottomIndex + 1);
 		}
 	}
+
+
+	public void tileTapped(int indexX, int indexY) {
+		Tile hit = tiles[indexX, indexY];
+		if (hit.isHidden()/* && not path??*/) {
+			hit.nextFlag ();
+		}
+	}
+
 }
