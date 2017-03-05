@@ -210,15 +210,25 @@ public class tileGeneration : MonoBehaviour {
 		}
 	}
 	public void movePlayerUp() {
-		if (!movingPlayer && playerLoc.y < verticalExtent-1) {
-			movingPlayer = true;
-			playerScript.move (0, 1, tiles[++playerLoc.y, playerLoc.x]);
+		if (!movingPlayer) {
+			if (playerLoc.y < verticalExtent - 1) {
+				movingPlayer = true;
+				playerScript.move (0, 1, tiles [++playerLoc.y, playerLoc.x]);
+			} else {
+				movingPlayer = true;
+				playerScript.move (0, 1, tiles [0, playerLoc.x]);
+			}
 		}
 	}
 	public void movePlayerDown() {
-		if (!movingPlayer && playerLoc.y > 0) {
-			movingPlayer = true;
-			playerScript.move (0, -1, tiles[--playerLoc.y, playerLoc.x]);
+		if (!movingPlayer) {
+			if (playerLoc.y > 0) {
+				movingPlayer = true;
+				playerScript.move (0, -1, tiles[--playerLoc.y, playerLoc.x]);
+			} else {
+				movingPlayer = true;
+				playerScript.move (0, 1, tiles [verticalExtent-1, playerLoc.x]);
+			}
 		}
 	}
 

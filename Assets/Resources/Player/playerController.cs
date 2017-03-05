@@ -5,7 +5,7 @@ using UnityEngine;
 public class playerController : MonoBehaviour {
 
 	public float sideLength;
-	const float moveSpeedRatio = 10f;
+	const float moveSpeedRatio = 20f;
 
 	float downSpeed;
 
