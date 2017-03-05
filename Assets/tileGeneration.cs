@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class tileGeneration : MonoBehaviour {
-	float speed = -0.55f;
+	float speed = -0.15f;
 
 	//public GameObject testingSquare;
 
