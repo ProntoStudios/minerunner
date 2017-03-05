@@ -10,6 +10,7 @@ public class Tile {
 
 	//Object Properties
 	private bool bomb;
+	private bool flag;
 	private bool hidden;
 	private int number;
 	private bool odd;
@@ -25,6 +26,7 @@ public class Tile {
 	static Color backColorOdd = new Color(1f, 1f, 1f, 1f );
 
 	static Sprite bombSprite = Resources.Load<Sprite>("Tile/bomb");
+	static Sprite flagSprite = Resources.Load<Sprite>("Tile/bomb");//CHANGE TO FLAG
 	static Sprite noneSprite = Resources.Load<Sprite>("Tile/none");
 	static Sprite[] numberSprite = {
 		Resources.Load<Sprite>("Tile/Numbers/0"),
@@ -50,6 +52,7 @@ public class Tile {
 		tileObject = (GameObject) GameObject.Instantiate(Resources.Load("Tile/Tile"));
 
 		tileObject.transform.localPosition = new Vector3 (x, y, (float)LAYER);
+		tileObject.GetComponent<TileObjectAttributes>().setIndex(indexX, indexY);
 
 		tileObject.GetComponentInChildren<Transform> ().Find ("Background").transform.localPosition = new Vector3(0, 0, LAYER-1);
 		tileObject.GetComponentInChildren<Transform> ().Find ("Object").transform.localPosition = new Vector3(0, 0, LAYER-2);
@@ -68,6 +71,7 @@ public class Tile {
 		rb = tileObject.GetComponent<Rigidbody2D>();
 
 		bomb = bmb;
+		flag = false;
 		hidden = hddn;
 		number = 0;
 		odd = isOdd;
@@ -82,6 +86,10 @@ public class Tile {
 
 	public bool isBomb() {
 		return bomb;
+	}
+
+	public bool isFlag() {
+		return flag;
 	}
 
 	public int intIsBomb() {
@@ -101,8 +109,18 @@ public class Tile {
 		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = bombSprite;
 	}
 
+	public void clearFlag() {
+		flag = false;
+		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
+	}
+	public void plantFlag() {
+		flag = true;
+		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = flagSprite;
+	}
+
 	public void hide() {
 		hidden = true;
+		flag = false;
 		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
 		if (odd) {
 			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = hiddenColorOdd;

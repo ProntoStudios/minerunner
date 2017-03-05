@@ -68,7 +68,10 @@ public class touchController : MonoBehaviour {
 		Vector3 worldTouch = Camera.main.ScreenToWorldPoint(pos); 
 		RaycastHit2D hit = Physics2D.Raycast (new Vector2 (worldTouch.x, worldTouch.y), Vector2.zero, Mathf.Infinity);
 		if (hit != null) {
-			Debug.Log("You selected the " + hit.transform.name); // ensure you picked right object
+			int x = hit.transform.GetComponent<TileObjectAttributes>().getIndexX();
+			int y = hit.transform.GetComponent<TileObjectAttributes>().getIndexY();
+			Debug.Log("Selected tile at " + x+","+y); // ensure you picked right object
+			GameObject.Find("TileGenerator").GetComponent<tileGeneration>().tileTapped(x,y);
 		}
 	}
 }
