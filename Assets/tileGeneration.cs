@@ -156,11 +156,7 @@ public class tileGeneration : MonoBehaviour {
 	public void tileTapped(int indexX, int indexY) {
 		Tile hit = tiles[indexX, indexY];
 		if (hit.isHidden()/* && not path??*/) {
-			if (hit.isFlag ()) {
-				hit.clearFlag ();
-			} else {
-				hit.plantFlag();
-			}
+			hit.nextFlag ();
 		}
 	}
 
