@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class tileGeneration : MonoBehaviour {
+<<<<<<< HEAD
 	float speed = -0.55f;
 	public static tileGeneration instance;
+=======
+	float speed = -0.15f;
+>>>>>>> e8666b52e07e5f59e1dd09ea2b63ba905856f658
 
 	//public GameObject testingSquare;
 

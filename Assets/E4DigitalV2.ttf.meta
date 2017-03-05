@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 2d3ce9ba0f16be340a13e8b363f17696
+timeCreated: 1488714472
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: E4 Digital V2
+  fontNames:
+  - E4 Digital V2
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
