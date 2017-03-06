@@ -110,6 +110,7 @@ public class tileGeneration : MonoBehaviour {
 
 	}
 		
+	bool firstMove = false;
 
 	void Start () {
 		instance = this;
@@ -118,6 +119,7 @@ public class tileGeneration : MonoBehaviour {
 		} else if (instance != this) {
 			Destroy (gameObject);
 		}*/
+		firstMove = true;
 
 		Debug.Log (Screen.width);
 		Debug.Log (Screen.height);
@@ -203,6 +205,10 @@ public class tileGeneration : MonoBehaviour {
 			tiles [playerLoc.y, playerLoc.x].tunnel (3, 0);
 			playerScript.move (-1, 0, tiles[playerLoc.y, --playerLoc.x],  tiles[oldLoc.y, oldLoc.x]);
 			tiles [playerLoc.y, playerLoc.x].tunnel (3, 1);
+			if (firstMove) {
+				firstMove = false;
+				tiles [oldLoc.y, oldLoc.x].updatePath ();
+			}
 			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
@@ -213,6 +219,10 @@ public class tileGeneration : MonoBehaviour {
 			tiles [playerLoc.y, playerLoc.x].tunnel (1, 0);
 			playerScript.move (1, 0, tiles[playerLoc.y, ++playerLoc.x],  tiles[oldLoc.y, oldLoc.x]);
 			tiles [playerLoc.y, playerLoc.x].tunnel (1, 1);
+			if (firstMove) {
+				firstMove = false;
+				tiles [oldLoc.y, oldLoc.x].updatePath ();
+			}
 			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
@@ -228,6 +238,10 @@ public class tileGeneration : MonoBehaviour {
 				playerLoc.y = 0;
 			}
 			tiles [playerLoc.y, playerLoc.x].tunnel (0, 1);
+			if (firstMove) {
+				firstMove = false;
+				tiles [oldLoc.y, oldLoc.x].updatePath ();
+			}
 			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
@@ -243,6 +257,10 @@ public class tileGeneration : MonoBehaviour {
 				playerLoc.y = verticalExtent - 1;
 			}
 			tiles [playerLoc.y, playerLoc.x].tunnel (2, 1);
+			if (firstMove) {
+				firstMove = false;
+				tiles [oldLoc.y, oldLoc.x].updatePath ();
+			}
 			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
