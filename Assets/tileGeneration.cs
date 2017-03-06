@@ -11,7 +11,7 @@ public class tileGeneration : MonoBehaviour {
 	//public GameObject testingSquare;
 
 	Tile[,] tiles;
-	float sideLength; //= Screen.width / 5.0f;
+	public float sideLength; //= Screen.width / 5.0f;
 	int startHeight = -2;
 
 	int bottomIndex;
@@ -67,6 +67,7 @@ public class tileGeneration : MonoBehaviour {
 				tiles [bottom, x].plantBomb ();
 			}
 			tiles [bottom, x].hide ();
+			tiles [bottom, x].reset();
 		}
 
 		//updating current row numbers
@@ -166,7 +167,6 @@ public class tileGeneration : MonoBehaviour {
 		worldScreenWidth /= 5.0f;
 		Vector3 world_scale = new Vector3 (worldScreenWidth, worldScreenWidth, 1.0f);
 
-		playerScript.sideLength = sideLength;
 		player.transform.localScale = world_scale;
 		playerScript.setDownwardSpeed (speed);
 		playerScript.setPosition (screenBase.x + sideLength / 2 + 2 * sideLength, sideLength * 4 + screenBase.y - sideLength / 2);
@@ -197,18 +197,20 @@ public class tileGeneration : MonoBehaviour {
 
 	public void movePlayerLeft() {
 		if (!movingPlayer && playerLoc.x > 0) {
+			Int2 oldLoc = playerLoc;
 			movingPlayer = true;
 			tiles [playerLoc.y, playerLoc.x].tunnel (3, 0);
-			playerScript.move (-1, 0, tiles[playerLoc.y, --playerLoc.x]);
+			playerScript.move (-1, 0, tiles[playerLoc.y, --playerLoc.x],  tiles[oldLoc.y, oldLoc.x]);
 			tiles [playerLoc.y, playerLoc.x].tunnel (3, 1);
 			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
 	public void movePlayerRight() {
 		if (!movingPlayer && playerLoc.x < 4) {
+			Int2 oldLoc = playerLoc;
 			movingPlayer = true;
 			tiles [playerLoc.y, playerLoc.x].tunnel (1, 0);
-			playerScript.move (1, 0, tiles[playerLoc.y, ++playerLoc.x]);
+			playerScript.move (1, 0, tiles[playerLoc.y, ++playerLoc.x],  tiles[oldLoc.y, oldLoc.x]);
 			tiles [playerLoc.y, playerLoc.x].tunnel (1, 1);
 			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
@@ -216,11 +218,12 @@ public class tileGeneration : MonoBehaviour {
 	public void movePlayerUp() {
 		if (!movingPlayer) {
 			movingPlayer = true;
+			Int2 oldLoc = playerLoc;
 			tiles [playerLoc.y, playerLoc.x].tunnel (0, 0);
 			if (playerLoc.y < verticalExtent - 1) {
-				playerScript.move (0, 1, tiles [++playerLoc.y, playerLoc.x]);
+				playerScript.move (0, 1, tiles [++playerLoc.y, playerLoc.x],  tiles[oldLoc.y, oldLoc.x]);
 			} else {
-				playerScript.move (0, 1, tiles [0, playerLoc.x]);
+				playerScript.move (0, 1, tiles [0, playerLoc.x],  tiles[oldLoc.y, oldLoc.x]);
 				playerLoc.y = 0;
 			}
 			tiles [playerLoc.y, playerLoc.x].tunnel (0, 1);
@@ -231,10 +234,11 @@ public class tileGeneration : MonoBehaviour {
 		if (!movingPlayer) {
 			movingPlayer = true;
 			tiles [playerLoc.y, playerLoc.x].tunnel (2, 0);
+			Int2 oldLoc = playerLoc;
 			if (playerLoc.y > 0) {
-				playerScript.move (0, -1, tiles[--playerLoc.y, playerLoc.x]);
+				playerScript.move (0, -1, tiles[--playerLoc.y, playerLoc.x], tiles[oldLoc.y, oldLoc.x]);
 			} else {
-				playerScript.move (0, -1, tiles [verticalExtent-1, playerLoc.x]);
+				playerScript.move (0, -1, tiles [verticalExtent-1, playerLoc.x], tiles[oldLoc.y, oldLoc.x]);
 				playerLoc.y = verticalExtent - 1;
 			}
 			tiles [playerLoc.y, playerLoc.x].tunnel (2, 1);

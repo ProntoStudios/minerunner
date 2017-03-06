@@ -193,7 +193,7 @@ public class Tile {
 		return tileObject.transform.localPosition.x;
 	}
 
-	private void updatePath() {
+	public void updatePath() {
 		SpriteRenderer path = tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ();
 		Transform numTransform = tileObject.transform.FindChild ("Object").gameObject.transform;
 
@@ -270,7 +270,6 @@ public class Tile {
 		int removeSide = (dir + 2 * into) % 4;
 		Debug.Log (removeSide);
 		sides [removeSide] = false;
-		updatePath ();
 	}
 
 	public void setDownwardSpeed(float speed) {
