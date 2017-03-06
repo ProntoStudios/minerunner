@@ -34,6 +34,8 @@ public class tileGeneration : MonoBehaviour {
 	private GameObject player;
 	playerController playerScript;
 
+	int genCount = 0;
+
 	void generateRow(int bottom, float y, bool first = false) {
 		for (int i = 0; i < 5; i++) {
 			tiles [bottom, i].setY (y + sideLength);
@@ -63,11 +65,18 @@ public class tileGeneration : MonoBehaviour {
 		}
 
 		for (int x = 0; x < 5; x++) {
-			if (!clear[x] && Random.Range (0, 2) == 1) {
+			if (!clear [x] && Random.Range (0, 2) == 1 && (genCount >= 4)) {
 				tiles [bottom, x].plantBomb ();
 			}
 			tiles [bottom, x].hide ();
 			tiles [bottom, x].reset();
+			if (genCount < 4) {
+				tiles [bottom, x].show ();
+			}
+		}
+
+		if (genCount < 4) {
+			genCount++;
 		}
 
 		//updating current row numbers

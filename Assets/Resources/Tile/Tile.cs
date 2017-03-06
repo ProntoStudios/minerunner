@@ -264,6 +264,11 @@ public class Tile {
 			path.sprite = crossPath;
 			numTransform.rotation = Quaternion.Euler(0,0,0);
 		}
+		if (hidden = false) {
+			path.sprite = blankImg;
+			Debug.Log ("setting blank");
+		}
+		//Debug.Log ("setting blank");
 	}
 
 	public void tunnel(int dir, int into) {
