@@ -17,6 +17,25 @@ public class touchController : MonoBehaviour {
 				Debug.Log("You selected the " + hit.transform.name); // ensure you picked right object
 			}
 		}*/
+
+		// DESKTOP
+		if (Input.GetKey(KeyCode.LeftArrow))
+		{
+			tileGeneration.instance.movePlayerLeft();
+		}
+		if (Input.GetKey(KeyCode.RightArrow))
+		{
+			tileGeneration.instance.movePlayerRight();
+		}
+		if (Input.GetKey(KeyCode.UpArrow))
+		{
+			tileGeneration.instance.movePlayerUp();
+		}
+		if (Input.GetKey(KeyCode.DownArrow))
+		{
+			tileGeneration.instance.movePlayerDown();
+		}
+
 		if(Input.touchCount > 0 ){
 			switch (Input.GetTouch(0).phase) {
 			case TouchPhase.Began:

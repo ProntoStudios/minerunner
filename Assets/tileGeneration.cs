@@ -66,9 +66,7 @@ public class tileGeneration : MonoBehaviour {
 			if (!clear[x] && Random.Range (0, 2) == 1) {
 				tiles [bottom, x].plantBomb ();
 			}
-			if (x % 2 == 0) {
-				tiles [bottom, x].hide ();
-			}
+			tiles [bottom, x].hide ();
 		}
 
 		//updating current row numbers
@@ -200,35 +198,47 @@ public class tileGeneration : MonoBehaviour {
 	public void movePlayerLeft() {
 		if (!movingPlayer && playerLoc.x > 0) {
 			movingPlayer = true;
+			tiles [playerLoc.y, playerLoc.x].tunnel (3, 0);
 			playerScript.move (-1, 0, tiles[playerLoc.y, --playerLoc.x]);
+			tiles [playerLoc.y, playerLoc.x].tunnel (3, 1);
+			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
 	public void movePlayerRight() {
 		if (!movingPlayer && playerLoc.x < 4) {
 			movingPlayer = true;
+			tiles [playerLoc.y, playerLoc.x].tunnel (1, 0);
 			playerScript.move (1, 0, tiles[playerLoc.y, ++playerLoc.x]);
+			tiles [playerLoc.y, playerLoc.x].tunnel (1, 1);
+			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
 	public void movePlayerUp() {
 		if (!movingPlayer) {
+			movingPlayer = true;
+			tiles [playerLoc.y, playerLoc.x].tunnel (0, 0);
 			if (playerLoc.y < verticalExtent - 1) {
-				movingPlayer = true;
 				playerScript.move (0, 1, tiles [++playerLoc.y, playerLoc.x]);
 			} else {
-				movingPlayer = true;
 				playerScript.move (0, 1, tiles [0, playerLoc.x]);
+				playerLoc.y = 0;
 			}
+			tiles [playerLoc.y, playerLoc.x].tunnel (0, 1);
+			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
 	public void movePlayerDown() {
 		if (!movingPlayer) {
+			movingPlayer = true;
+			tiles [playerLoc.y, playerLoc.x].tunnel (2, 0);
 			if (playerLoc.y > 0) {
-				movingPlayer = true;
 				playerScript.move (0, -1, tiles[--playerLoc.y, playerLoc.x]);
 			} else {
-				movingPlayer = true;
-				playerScript.move (0, 1, tiles [verticalExtent-1, playerLoc.x]);
+				playerScript.move (0, -1, tiles [verticalExtent-1, playerLoc.x]);
+				playerLoc.y = verticalExtent - 1;
 			}
+			tiles [playerLoc.y, playerLoc.x].tunnel (2, 1);
+			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
 

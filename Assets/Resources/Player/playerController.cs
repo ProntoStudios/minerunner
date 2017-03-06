@@ -21,6 +21,8 @@ public class playerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+
+
 		if (moving.x == -1) {
 			if (transform.localPosition.x <= destTile.getX()) {
 				moving.x = 0;
@@ -61,6 +63,7 @@ public class playerController : MonoBehaviour {
 	}
 
 	public void move (int x, int y, Tile destination) {
+
 		// move by sidelength up/down x=1/-1, or left/right y=1/-1
 		if (moving.x != 0 || moving.y != 0) {
 			// only allow one movement at a time.
@@ -74,7 +77,7 @@ public class playerController : MonoBehaviour {
 			new Vector2 (x * Mathf.Abs(transform.GetComponent<Rigidbody2D> ().velocity.y) * moveSpeedRatio,
 				y * Mathf.Abs(transform.GetComponent<Rigidbody2D> ().velocity.y) * moveSpeedRatio);
 		
-		Debug.Log ("moving (" + x + "," + y + ")");
+		//Debug.Log ("moving (" + x + "," + y + ")");
 
 	}
 

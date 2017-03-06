@@ -53,7 +53,7 @@ public class Tile {
 	private static Sprite straightPath = Resources.Load<Sprite>("Tile/Paths/straight");
 
 
-	public Tile(float x, float y, int indexX, int indexY, bool isOdd, bool hddn = false, bool bmb = false) {
+	public Tile(float x, float y, int indexX, int indexY, bool isOdd, bool bmb = false) {
 		tileObject = (GameObject) GameObject.Instantiate(Resources.Load("Tile/Tile"));
 		tileObject.name = "(" + indexX.ToString () + "," + indexY.ToString () + ")";
 
@@ -78,14 +78,14 @@ public class Tile {
 
 		bomb = bmb;
 		flag = FLAG_NONE;
-		hidden = hddn;
+		hidden = false;
 		number = 0;
 		odd = isOdd;
 
 		if (odd) {
-			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColorOdd;
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = hiddenColor;
 		} else {
-			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColor;
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = hiddenColorOdd;
 		}
 
 	}
@@ -140,6 +140,29 @@ public class Tile {
 		}
 	}
 
+	public void reset() {
+		hidden = true;
+		flag = 0;
+		tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
+		sides[0] = true; sides [1] = true; sides [2] = true; sides [3] = true;
+		updatePath();
+	}
+		
+	public void show() {
+		hidden = false;
+		flag = 0;
+		if (bomb) {
+			tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = bombSprite;
+		} else {
+			tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
+		}
+		if (odd) {
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColorOdd;
+		} else {
+			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColor;
+		}
+	}
+
 	public void setNumber(int num) {
 		if (num > 9 || num < 0)
 			num = 0;
@@ -179,7 +202,7 @@ public class Tile {
 		}
 		if (sides [0] && sides[1] && sides[2] && !sides[3]) {
 			path.sprite = endPath;
-			numTransform.rotation = Quaternion.Euler(0,0,90);
+			numTransform.rotation = Quaternion.Euler(0,0,-90);
 		}
 		if (sides [0] && sides[1] && !sides[2] && sides[3]) {
 			path.sprite = endPath;
@@ -202,8 +225,9 @@ public class Tile {
 			numTransform.rotation = Quaternion.Euler(0,0,-90);
 		}
 		if (sides [0] && !sides[1] && !sides[2] && !sides[3]) {
+			Debug.Log ("0111");
 			path.sprite = tPath;
-			numTransform.rotation = Quaternion.Euler(0,0,90);
+			numTransform.rotation = Quaternion.Euler(0,0,0);
 		}
 		if (!sides [0] && sides[1] && sides[2] && sides[3]) {
 			path.sprite = endPath;
@@ -218,6 +242,7 @@ public class Tile {
 			numTransform.rotation = Quaternion.Euler(0,0,0);
 		}
 		if (!sides [0] && sides[1] && !sides[2] && !sides[3]) {
+			Debug.Log ("1011");
 			path.sprite = tPath;
 			numTransform.rotation = Quaternion.Euler(0,0,-90);
 		}
@@ -226,12 +251,14 @@ public class Tile {
 			numTransform.rotation = Quaternion.Euler(0,0,0);
 		}
 		if (!sides [0] && !sides[1] && sides[2] && !sides[3]) {
+			Debug.Log ("1101");
 			path.sprite = tPath;
 			numTransform.rotation = Quaternion.Euler(0,0,180);
 		}
 		if (!sides [0] && !sides[1] && !sides[2] && sides[3]) {
+			Debug.Log ("1110");
 			path.sprite = tPath;
-			numTransform.rotation = Quaternion.Euler(0,0,0);
+			numTransform.rotation = Quaternion.Euler(0,0,90);
 		}
 		if (!sides [0] && !sides[1] && !sides[2] && !sides[3]) {
 			path.sprite = crossPath;
@@ -241,6 +268,7 @@ public class Tile {
 
 	public void tunnel(int dir, int into) {
 		int removeSide = (dir + 2 * into) % 4;
+		Debug.Log (removeSide);
 		sides [removeSide] = false;
 		updatePath ();
 	}
