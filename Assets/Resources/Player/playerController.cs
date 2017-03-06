@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour {
 	
-	const float moveSpeedRatio = 20f;
+	const float moveSpeed = 5f;
 
 	float innerDistance;
-	float downSpeed;
 
 	Vector2 moving = new Vector3(0, 0);
 	float distanceRatio = 5f;
@@ -17,7 +16,7 @@ public class playerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, tileGeneration.instance.speed, 0);	
 	}
 	
 	// Update is called once per frame
@@ -27,7 +26,7 @@ public class playerController : MonoBehaviour {
 			if (transform.localPosition.x <= destTile.getX()) {
 				moving.x = 0;
 				transform.localPosition = new Vector3(destTile.getX(), transform.localPosition.y, transform.localPosition.z);
-				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, downSpeed, 0);
+				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, tileGeneration.instance.speed, 0);
 				tileGeneration.instance.movingPlayer = false;
 			}
 			if (transform.localPosition.x <= destTile.getX () + tileGeneration.instance.sideLength / distanceRatio) {
@@ -39,7 +38,7 @@ public class playerController : MonoBehaviour {
 			if (transform.localPosition.x >= destTile.getX()) {
 				moving.x = 0;
 				transform.localPosition = new Vector3(destTile.getX(), transform.localPosition.y, transform.localPosition.z);
-				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, downSpeed, 0);
+				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, tileGeneration.instance.speed, 0);
 				tileGeneration.instance.movingPlayer = false;
 			}
 			if (transform.localPosition.x >= destTile.getX () - tileGeneration.instance.sideLength / distanceRatio) {
@@ -51,7 +50,7 @@ public class playerController : MonoBehaviour {
 			if (transform.localPosition.y >= destTile.getY()) {
 				moving.y = 0;
 				transform.localPosition = new Vector3(transform.localPosition.x, destTile.getY(), transform.localPosition.z);
-				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, downSpeed, 0);
+				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, tileGeneration.instance.speed, 0);
 				tileGeneration.instance.movingPlayer = false;
 			}
 			if (transform.localPosition.y >= destTile.getY () - tileGeneration.instance.sideLength / distanceRatio) {
@@ -63,7 +62,7 @@ public class playerController : MonoBehaviour {
 			if (transform.localPosition.y <= destTile.getY()) {
 				moving.y = 0;
 				transform.localPosition = new Vector3(transform.localPosition.x, destTile.getY(), transform.localPosition.z);
-				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, downSpeed, 0);
+				transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, tileGeneration.instance.speed, 0);
 				tileGeneration.instance.movingPlayer = false;
 			}
 			if (transform.localPosition.y <= destTile.getY () + tileGeneration.instance.sideLength / distanceRatio) {
@@ -91,17 +90,18 @@ public class playerController : MonoBehaviour {
 		startTile = start;
 
 		moving = new Vector2 (x, y);
-		transform.GetComponent<Rigidbody2D> ().velocity += 
-			new Vector2 (x * Mathf.Abs(transform.GetComponent<Rigidbody2D> ().velocity.y) * moveSpeedRatio,
-				y * Mathf.Abs(transform.GetComponent<Rigidbody2D> ().velocity.y) * moveSpeedRatio);
+		transform.GetComponent<Rigidbody2D> ().velocity += new Vector2 (x * moveSpeed, y * moveSpeed);
 		
 		//Debug.Log ("moving (" + x + "," + y + ")");
 
 	}
-
+		
 	public void setDownwardSpeed (float speed) {
-		downSpeed = speed;
 		transform.GetComponent<Rigidbody2D>().velocity = new Vector3 (0, speed, 0);
+	}
+
+	public float getY() {
+		return transform.localPosition.y;
 	}
 
 }	

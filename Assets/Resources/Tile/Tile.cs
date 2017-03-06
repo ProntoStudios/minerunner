@@ -26,7 +26,8 @@ public class Tile {
 	//Static Fields
 	private static Color hiddenColor = new Color( 0.4f, 0.4f, 0.4f, 1f );
 	private static Color hiddenColorOdd = new Color( 0.5f, 0.5f, 0.5f, 1f );
-	private static Color backColor = new Color(0.9f, 0.9f, 0.9f, 1f );
+	//225 225 225
+	private static Color backColor = new Color(0.9215686274509803f, 0.9215686274509803f, 0.9215686274509803f, 1f );
 	private static Color backColorOdd = new Color(1f, 1f, 1f, 1f );
 
 	private static Sprite bombSprite = Resources.Load<Sprite>("Tile/bomb");
@@ -156,11 +157,7 @@ public class Tile {
 		} else {
 			tileObject.transform.FindChild ("Object").gameObject.GetComponent<SpriteRenderer> ().sprite = noneSprite;
 		}
-		if (odd) {
-			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColorOdd;
-		} else {
-			tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColor;
-		}
+		tileObject.transform.FindChild ("Background").gameObject.GetComponent<SpriteRenderer> ().color = backColor;
 	}
 
 	public void setNumber(int num) {
@@ -264,7 +261,7 @@ public class Tile {
 			path.sprite = crossPath;
 			numTransform.rotation = Quaternion.Euler(0,0,0);
 		}
-		if (hidden = false) {
+		if (hidden == false) {
 			path.sprite = blankImg;
 			Debug.Log ("setting blank");
 		}

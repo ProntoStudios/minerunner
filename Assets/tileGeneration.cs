@@ -6,7 +6,8 @@ public class tileGeneration : MonoBehaviour {
 
 	public static tileGeneration instance;
 
-	float speed = -0.15f;
+	public float baseSpeed = -0.15f;
+	public float speed = -0.15f;
 
 	//public GameObject testingSquare;
 
@@ -120,6 +121,7 @@ public class tileGeneration : MonoBehaviour {
 	}
 		
 	bool firstMove = false;
+	float topOfScreen;
 
 	void Start () {
 		instance = this;
@@ -151,6 +153,7 @@ public class tileGeneration : MonoBehaviour {
 
 		tiles = new Tile[verticalExtent, 5];
 		float lastTop = screenBase.y - sideLength / 2;
+		topOfScreen = (screenSize.y / sideLength) + screenBase.y;
 
 		//float h = screenBase.y + screenSize.y - sideLength/2;
 
@@ -180,7 +183,6 @@ public class tileGeneration : MonoBehaviour {
 		Vector3 world_scale = new Vector3 (worldScreenWidth, worldScreenWidth, 1.0f);
 
 		player.transform.localScale = world_scale;
-		playerScript.setDownwardSpeed (speed);
 		playerScript.setPosition (screenBase.x + sideLength / 2 + 2 * sideLength, sideLength * 4 + screenBase.y - sideLength / 2);
 
 		playerLoc.x = 2;
@@ -190,6 +192,22 @@ public class tileGeneration : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
+		if (playerScript.getY () >= topOfScreen - sideLength * 3) {
+			speed = baseSpeed * 1/((topOfScreen - sideLength * 3)/playerScript.getY());
+			changeSpeed (speed);
+			if (!movingPlayer) {
+				playerScript.setDownwardSpeed (speed);
+			}
+		} else {
+			if (speed != baseSpeed) {
+				speed = baseSpeed;
+				changeSpeed (speed);
+				if (!movingPlayer) {
+					playerScript.setDownwardSpeed (speed);
+				}
+			}
+			//playerScript.setDownwardSpeed (speed);
+		}
 		if (tiles [bottomIndex,0].topGreater (screenBase.y + screenSize.y + sideLength/2)) {
 			//if bottom row has exceeded screen
 			int topIndex = (bottomIndex == 0) ? (verticalExtent - 1) : (bottomIndex - 1);
@@ -254,6 +272,15 @@ public class tileGeneration : MonoBehaviour {
 			Debug.Log (playerLoc.x.ToString () + ", " + playerLoc.y.ToString ());
 		}
 	}
+
+	public void changeSpeed(float newSpeed) {
+		for (int y = 0; y < verticalExtent; y++) {
+			for (int x = 0; x < 5; x++) {
+				tiles [y, x].setDownwardSpeed (newSpeed);
+			}
+		}
+	}
+
 	public void movePlayerDown() {
 		if (!movingPlayer) {
 			movingPlayer = true;
