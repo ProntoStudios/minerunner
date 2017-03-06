@@ -111,11 +111,12 @@ public class tileGeneration : MonoBehaviour {
 		
 
 	void Start () {
-		if (instance == null) {
+		instance = this;
+		/*if (instance == null) {
 			instance = this;
 		} else if (instance != this) {
 			Destroy (gameObject);
-		}
+		}*/
 
 		Debug.Log (Screen.width);
 		Debug.Log (Screen.height);
