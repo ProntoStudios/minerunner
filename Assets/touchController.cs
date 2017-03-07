@@ -9,31 +9,23 @@ public class touchController : MonoBehaviour {
 	private Vector2 touchStartPosition;
 
 	void Update () {
-		/*if ( Input.GetMouseButtonDown (0)){ 
-			//Debug.Log ("mouse down");
-			Vector3 worldTouch = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
-			RaycastHit2D hit = Physics2D.Raycast (new Vector2 (worldTouch.x, worldTouch.y), Vector2.zero, Mathf.Infinity);
-			if (hit != null) {
-				Debug.Log("You selected the " + hit.transform.name); // ensure you picked right object
-			}
-		}*/
 
-		// DESKTOP
-		if (Input.GetKey(KeyCode.LeftArrow))
-		{
-			tileGeneration.instance.movePlayerLeft();
-		}
-		if (Input.GetKey(KeyCode.RightArrow))
-		{
-			tileGeneration.instance.movePlayerRight();
-		}
-		if (Input.GetKey(KeyCode.UpArrow))
-		{
-			tileGeneration.instance.movePlayerUp();
-		}
-		if (Input.GetKey(KeyCode.DownArrow))
-		{
-			tileGeneration.instance.movePlayerDown();
+		if (SystemInfo.deviceType == DeviceType.Desktop) {
+			if ( Input.GetMouseButtonDown (0)){ 
+				Tap(Input.mousePosition);
+			}
+			if (Input.GetKey (KeyCode.LeftArrow)) {
+				tileGeneration.instance.movePlayerLeft ();
+			}
+			if (Input.GetKey (KeyCode.RightArrow)) {
+				tileGeneration.instance.movePlayerRight ();
+			}
+			if (Input.GetKey (KeyCode.UpArrow)) {
+				tileGeneration.instance.movePlayerUp ();
+			}
+			if (Input.GetKey (KeyCode.DownArrow)) {
+				tileGeneration.instance.movePlayerDown ();
+			}
 		}
 
 		if(Input.touchCount > 0 ){
@@ -94,7 +86,7 @@ public class touchController : MonoBehaviour {
 			int x = hit.transform.GetComponent<TileObjectAttributes>().getIndexX();
 			int y = hit.transform.GetComponent<TileObjectAttributes>().getIndexY();
 			Debug.Log("Selected tile at " + x+","+y); // ensure you picked right object
-			GameObject.Find("TileGenerator").GetComponent<tileGeneration>().tileTapped(x,y);
+			tileGeneration.instance.tileTapped(x,y);
 		}
 	}
 }
